@@ -2,6 +2,7 @@ library(tidyverse)
 library(rvest)
 library(httr)
 library(readxl)
+library(writexl)
 library(stringr)
 library(purrr) # to split strings
 library(hrbrthemes)
@@ -26,7 +27,7 @@ vignette("basics", package = "RSelenium")
 
 remDr <- remoteDriver(
   remoteServerAddr = "localhost",
-  port = 32770,
+  port = 32768,
   browserName = "firefox"
 )
 
@@ -43,7 +44,7 @@ db.links <- tibble(
 )
 
 #---scraping -------
-apply(data.general, 1, function(x){
+bd.total <- apply(data.general, 1, function(x){
   n <- 0
   while(n<as.numeric(x[["padding"]])){
     n <- n + 1
@@ -63,7 +64,16 @@ apply(data.general, 1, function(x){
     )
     db.links <- rbind(db.links, df.tabla)
   }
+  db.links
 })
+
+# transform list of lists in tibble
+db.links <- bind_rows(map(bd.total, as_tibble))
+colnames(db.links) <- c('Name', 'Country', 'Exchange', 'Sector', 'Link')
+
+write_xlsx(db.links, "./scrapy/linksTotales.xlsx")
+
+
 
 
 

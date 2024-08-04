@@ -6,7 +6,7 @@ vignette("basics", package = "RSelenium")
 
 remDr <- remoteDriver(
   remoteServerAddr = "localhost",
-  port = 32770,
+  port = 32769,
   browserName = "firefox"
 )
 
