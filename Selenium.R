@@ -1,13 +1,14 @@
 library(RSelenium)
 library(rvest)
 library(tidyverse)
+library(htmltools)
 
 vignette("basics", package = "RSelenium")
 
 remDr <- remoteDriver(
   remoteServerAddr = "localhost",
   port = 32769,
-  browserName = "firefox"
+  browserName = "chrome",
 )
 
 remDr$open()
@@ -29,6 +30,14 @@ df.tabla <- tibble(
 )
 
 
-writeLines(html_source, "pag2.html")
+writeLines(html_source, "pag3.html")
 
 
+
+remDr$navigate("https://www.trackinsight.com/en/fund/SMH")
+remDr$executeScript("window.scrollTo(0, document.body.scrollHeight);")
+Sys.sleep(runif(1, min = 2, max = 8)) 
+html_source2 <- remDr$getPageSource()[[1]]
+writeLines(html_source2, "pag4.html")
+
+remDr$close()
